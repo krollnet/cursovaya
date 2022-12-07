@@ -3,10 +3,11 @@
 
 #include "cursovaya.h"
 
-using namespace std;
+
+std::string getToken();
 
 int main() {
-    TgBot::Bot bot("5900512590:AAG2B26Vyf-sUu2cYN_ekUpNx7m5JulVrcY");
+    TgBot::Bot bot(getToken());
     bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message) {
         bot.getApi().sendMessage(message->chat->id, "Hi!");
         });
@@ -29,4 +30,12 @@ int main() {
         printf("error: %s\n", e.what());
     }
     return 0;
+}
+
+std::string getToken() {
+    std::ifstream file("config/token.txt");
+    std::string token;
+    file >> token;
+    file.close();
+    return token;
 }
