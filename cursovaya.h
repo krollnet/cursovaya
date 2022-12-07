@@ -7,4 +7,6 @@
 #include <fstream>
 #include <stdio.h>
 #include <tgbot/tgbot.h>
+#include <tesseract/baseapi.h>
+#include <leptonica/allheaders.h>
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.

@@ -6,7 +6,17 @@
 
 std::string getToken();
 
+std::string ocrImageFile(std::string filename);
+
+void initialTesseract();
+
+void freeTesseract();
+
+tesseract::TessBaseAPI* tesseractApi = nullptr;
+
 int main() {
+
+    initialTesseract();
     TgBot::Bot bot(getToken());
     bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message) {
         bot.getApi().sendMessage(message->chat->id, "Hi!");
@@ -29,6 +39,7 @@ int main() {
     catch (TgBot::TgException& e) {
         printf("error: %s\n", e.what());
     }
+    freeTesseract();
     return 0;
 }
 
@@ -39,3 +50,23 @@ std::string getToken() {
     file.close();
     return token;
 }
+
+std::string ocrImageFile(std::string filename) {
+    
+
+    return "";
+}
+
+void initialTesseract() {
+    tesseractApi = new tesseract::TessBaseAPI();
+    if (tesseractApi->Init(NULL, "eng")) {
+        fprintf(stderr, "Could not initialize tesseract.\n");
+        exit(1);
+    }
+}
+
+void freeTesseract() {
+
+}
+
+

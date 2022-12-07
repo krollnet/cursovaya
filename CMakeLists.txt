@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt: проект CMake для cursovaya; включите исходный код и определения,
 # укажите здесь логику для конкретного проекта.
 #
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.13)
 
 project ("cursovaya")
 
@@ -28,4 +28,27 @@ endif()
 
 # add_executable(echobot src/main.cpp)
 
-target_link_libraries(cursovaya C:/dev/vcpkg/installed/x64-windows/lib/TgBot.lib ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES})
+
+
+
+# project(tess_example CXX)
+
+
+set(SW_BUILD_SHARED_LIBS 1)
+set(DEPENDENCIES
+    org.sw.demo.google.tesseract.libtesseract-master
+    org.sw.demo.intel.opencv.imgproc
+    org.sw.demo.intel.opencv.highgui
+)
+
+find_package(SW REQUIRED)
+sw_add_package(${DEPENDENCIES})
+sw_execute()
+
+# target_link_libraries(${PROJECT_NAME} ${DEPENDENCIES})
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+
+target_link_libraries(cursovaya C:/dev/vcpkg/installed/x64-windows/lib/TgBot.lib ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ${DEPENDENCIES})
+
+
