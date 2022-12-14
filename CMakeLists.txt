@@ -14,41 +14,33 @@ add_executable (cursovaya "cursovaya.cpp" "cursovaya.h")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+
 set(Boost_USE_MULTITHREADED ON)
 
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(Boost COMPONENTS system REQUIRED)
 find_package(CURL)
-# include_directories(/usr/local/include ${OPENSSL_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
 if (CURL_FOUND)
     include_directories(${CURL_INCLUDE_DIRS})
     add_definitions(-DHAVE_CURL)
 endif()
-
-# add_executable(echobot src/main.cpp)
-
+set(TG_BOT ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/TgBot.lib)
 
 
-
-# project(tess_example CXX)
-
-
-set(SW_BUILD_SHARED_LIBS 1)
-set(DEPENDENCIES
-    org.sw.demo.google.tesseract.libtesseract-master
-    org.sw.demo.intel.opencv.imgproc
-    org.sw.demo.intel.opencv.highgui
-)
-
-find_package(SW REQUIRED)
-sw_add_package(${DEPENDENCIES})
-sw_execute()
-
-# target_link_libraries(${PROJECT_NAME} ${DEPENDENCIES})
-
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-
-target_link_libraries(cursovaya C:/dev/vcpkg/installed/x64-windows/lib/TgBot.lib ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ${DEPENDENCIES})
+find_package( Tesseract 5.2.0 REQUIRED )
+include_directories(${Tesseract_INCLUDE_DIRS})
 
 
+add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/config
+                ${CMAKE_CURRENT_BINARY_DIR}/config)
+
+add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/tessdata
+                ${CMAKE_CURRENT_BINARY_DIR}/tessdata)
+
+target_link_libraries(cursovaya ${TG_BOT} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} Tesseract::libtesseract)

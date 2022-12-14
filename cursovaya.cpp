@@ -58,10 +58,11 @@ std::string ocrImageFile(std::string filename) {
 }
 
 void initialTesseract() {
+    
     tesseractApi = new tesseract::TessBaseAPI();
     if (tesseractApi->Init(NULL, "eng")) {
         fprintf(stderr, "Could not initialize tesseract.\n");
-        exit(1);
+        exit(2);
     }
 }
 
